@@ -7,7 +7,6 @@
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
 
-#include "subsystems/DriverSubsystem.h"
 #include "subsystems/DoomSubsystem.h"
 
 class Robot : public frc::TimedRobot
@@ -19,9 +18,8 @@ public:
 	void DisabledInit() override;
 	void TeleopInit() override;
 	void SimulationInit() override;
-	
+
 	static DoomSubsystem m_doomSubsystem;
-	static DriverSubsystem m_driverSubsystem;
 
 private:
 	// Have it null by default so that if testing teleop it

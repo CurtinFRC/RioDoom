@@ -13,29 +13,19 @@
 
 frc::XboxController* controller = new frc::XboxController(0);
 DoomSubsystem Robot::m_doomSubsystem = DoomSubsystem(controller);
-DriverSubsystem Robot::m_driverSubsystem = DriverSubsystem(controller);
 
 Robot::Robot() : frc::TimedRobot(80_ms)
 {
 }
 void Robot::RobotInit()
 {
-	
+
 	ConfigureButtonBindings();
 }
 
 void Robot::ConfigureButtonBindings()
 {
 	// TODO - Pass Button Presses to DoomSubsystem
-	Robot::m_driverSubsystem.SetDefaultCommand<frc2::RunCommand>(frc2::RunCommand(
-		[this] {
-			DriverSubsystem::drive(
-				frc::ApplyDeadband(controller->GetLeftX(), 0.05),
-			 	frc::ApplyDeadband(controller->GetLeftY(), 0.05),
-				frc::ApplyDeadband(controller->GetRightX(), 0.05),
-				 &Robot::m_driverSubsystem);
-			}, {&Robot::m_driverSubsystem}
-	));
 
 }
 

@@ -3,10 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <span>
 
 #include "subsystems/DoomSubsystem.h"
-#include "subsystems/DriverSubsystem.h"
 #include <frc2/command/RunCommand.h>
 #include "Robot.h"
 
@@ -23,8 +21,8 @@ void DoomSubsystem::Periodic()
 {
 	static int periods = 0;
 
-	
-	
+
+
 	// TODO - collect joystick movements
 
 	frc::SmartDashboard::PutNumber("periods", ++periods);
@@ -55,33 +53,33 @@ std::mutex *s = new std::mutex();
 
 void DoomSubsystem::LaunchDoom()
 {
-	D_SetLoopHook(&DoomSubsystem::OnDoomLoop, [](double x, double y, double rotation){
-			s->lock();
-		try
-		{
-			
-		(frc2::RunCommand([x,y,rotation](){
-			// try{
-
-			std::thread d(DriverSubsystem::drive,x,y,rotation, &Robot::m_driverSubsystem);
-			d.detach();
-			// d.join();
-			// }catch(const std::exception& e){}
-		}, {&Robot::m_driverSubsystem}).Execute());
-			
-		}
-		catch(const std::exception& e)
-		{
-		}
-			s->unlock();
-
-	}, [](signed short *arr, size_t size){
-		try{
-		DriverSubsystem::play_sound(arr, size, &Robot::m_driverSubsystem);
-
-		// Robot::m_driverSubsystem.doom.Play();
-		} catch(const std::exception& e){}
-	});
+	// D_SetLoopHook(&DoomSubsystem::OnDoomLoop, [](double x, double y, double rotation){
+			// s->lock();
+	// 	try
+	// 	{
+	//
+	// 	(frc2::RunCommand([x,y,rotation](){
+	// 		// try{
+	//
+	// 		std::thread d(DriverSubsystem::drive,x,y,rotation, &Robot::m_driverSubsystem);
+	// 		d.detach();
+	// 		// d.join();
+	// 		// }catch(const std::exception& e){}
+	// 	}, {&Robot::m_driverSubsystem}).Execute());
+	//
+	// 	}
+	// 	catch(const std::exception& e)
+	// 	{
+	// 	}
+	// 		s->unlock();
+	//
+	// }, [](signed short *arr, size_t size){
+	// 	try{
+	// 	DriverSubsystem::play_sound(arr, size, &Robot::m_driverSubsystem);
+	//
+	// 	// Robot::m_driverSubsystem.doom.Play();
+	// 	} catch(const std::exception& e){}
+	// });
 	myargc = 0;
 	myargv = {};
 	// myargv[0] = strdup("-regdev");
@@ -108,7 +106,7 @@ void DoomSubsystem::sendKeyDown(int key)
 	// Keys are processed between Menu and game, menu is in M_Responder, game is in G_Responder.
 	event_t event = {ev_keydown, key, 0, 0};
 	D_PostEvent(&event);
-	
+
 }
 
 void DoomSubsystem::sendKeyUp(int key)
@@ -120,14 +118,14 @@ void DoomSubsystem::sendKeyUp(int key)
 
 void DoomSubsystem::OnDoomLoop()
 {
-	
+
 
 	// printf("Loop hook called!\n");
 	// Update the screen
 	Robot::m_doomSubsystem.UpdateMat();
 
-	
-	
+
+
 	// sendStick
 	// TODO Send joystick inputs to the engine
 }
@@ -135,7 +133,7 @@ void DoomSubsystem::OnDoomLoop()
 #define CLAMP(x, min, max) x > max ? max : (x < min ? min : x)
 
 void DoomSubsystem::UpdateMat()
-{	
+{
 	int pov = this->driver->GetPOV(0);
 	double driverrx = this->driver->GetLeftX();
 	double driverx = this->driver->GetRawAxis(4);
@@ -163,7 +161,7 @@ void DoomSubsystem::UpdateMat()
 		strafe = 1;
 	else
 		strafe = -1;
-		
+
 	if(this->releaseStrafe)
 	{
 		sendKeyUp(this->strafe > 0 ? '.' : ',');
@@ -179,7 +177,7 @@ void DoomSubsystem::UpdateMat()
 		sendKeyDown(',');
 		this->releaseStrafe = true;
 	}
-	
+
 	if(this->releaseWeaponChange)
 	{
 		this->releaseWeaponChange = false;
@@ -212,11 +210,11 @@ void DoomSubsystem::UpdateMat()
 		this->releaseWeaponChange = true;
 		sendKeyDown('1'+(this->weapon));
 	}
-	
+
 
 	sendStick(x,y, this->driver->GetRightBumper() || this->driver->GetAButton() || (this->driver->GetRightTriggerAxis() > 0.1),
 	 this->driver->GetBButton(), this->driver->GetXButton(), this->driver->GetYButton() || this->driver->GetLeftTriggerAxis() > 0.5);
-	
+
 	// Get the current screen buffer
 	byte palette[256 * 3];
 	byte screen[SCREEN_WIDTH * SCREEN_HEIGHT];

@@ -1,4 +1,3 @@
-#include "subsystems/DriverSubsystem.h"
 #include <frc/XboxController.h>
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 #include <frc/drive/DifferentialDrive.h>
@@ -15,7 +14,7 @@ DriverSubsystem::DriverSubsystem(frc::XboxController *controller)
 {
     DriverSubsystem::driver = controller;
     DriverSubsystem::right.SetInverted(true);
-    
+
     DriverSubsystem::driveBase.SetSafetyEnabled(false);
     DriverSubsystem::driveBase.SetExpiration(units::time::second_t(1));
 
@@ -106,7 +105,7 @@ void DriverSubsystem::drive(double x, double y, double rotation, DriverSubsystem
     if(fabs(x) > 1 || fabs(y) > 1)
         return;
     frc::ChassisSpeeds ch = {units::meters_per_second_t(x*0.01),units::meters_per_second_t(y*0.01),units::radians_per_second_t(rotation * M_PI* 0.01)};
-    
+
     frc::DifferentialDriveWheelSpeeds wh = subsys->kinimatics.ToWheelSpeeds(ch);
     // DriverSubsystem::driveBase->TankDrive(wh.left, wh.right);
     // subsys->driveBase->ArcadeDrive(0,0);
